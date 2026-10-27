@@ -1,0 +1,57 @@
+filetype: goose
+
+detect:
+  filename: '\.goose$'
+
+rules:
+  # Comments
+  - comment:
+      start: '//'
+      end: '$'
+      rules:
+        - todo: '(TODO|XXX|FIXME):?'
+  - comment:
+      start: '/\*'
+      end: '\*/'
+      rules:
+        - todo: '(TODO|XXX|FIXME):?'
+
+  # Statements
+  - statement: '\b(fn|thread_fn|let|var|const|return|break|continue|defer|if|else|match|guard|while|for|loop|import|from|namespace|struct|enum|type|block)\b'
+  
+  # Secondary keywords
+  - special: '\b(pad|reusable|fields|variants|types|in|upto|as)\b'
+  
+  # Types
+  - type: '\b(i8|i16|i32|i64|u8|u16|u32|u64|f32|f64|bool|varint)\b'
+  
+  # Constants
+  - constant: '\b(true|false|null|self)\b'
+  - constant.number: '\b(?:0x[0-9a-fA-F][0-9a-fA-F_]*(?:\.[0-9a-fA-F_]+)?(?:[pP][+-]?[0-9_]+)?|0b[01][01_]*|\d[\d_]*(?:\.[\d_]+)?(?:[eE][+-]?\d[\d_]*)?)\b'
+
+  # Raw strings
+  - constant.string:
+      start: '"""'
+      end: '"""'
+
+  # Normal strings
+  - constant.string:
+      start: '"'
+      end: '"'
+      skip: '\.'
+      rules:
+        - constant.specialChar: '\.'
+
+  # Character literals
+  - constant.char:
+      start: "'"
+      end: "'"
+      skip: '\.'
+      rules:
+        - constant.specialChar: '\.'
+  
+  # Operators
+  - operator: '\.\=|\.==|\.!=|==|!=|<=|>=|<<=|>>=|\|\||&&|\+\+|\-\-|->|=>|\.\.|\?|\+|\-|\*|/|%|!|&|\||\^|~|<<|>>|\+=|\-=|\*=|/=|%=|\&=|\|=|\^=|=|<|>'
+
+  # Delimiters
+  - delimiter: '::|[,;:\.]'
